@@ -2,7 +2,7 @@ krCI <- function(obj, nsim = 1000, CI = 0.95){
   if(CI > 1) stop("CI must be between 0 and 1")
   if(class(obj) != "sbchoice" & class(obj) != "dbchoice"){
     # stop if the object is neither a sdchoice nor a dbchoice class
-    stop("the object must be either dbchoice of sbchoice class")
+    stop("the object must be either dbchoice or sbchoice class")
   }
   
   X <- obj$covariates   # retrieving the covariates from the object

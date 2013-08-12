@@ -68,16 +68,14 @@ analyses for single-bounded dichotomous choice data whereas \code{\link{turnbull
 \note{
 \pkg{DCchoice} depends on \pkg{interval} (Fay and Shaw, 2010) and \pkg{Ecdat} (Croissant, 2011) 
 packages. The former further depends on several packages, among which \pkg{Icens} 
-(Gentleman and Vandal, 2011) package may not be installed automatically 
-because it is available only from \href{http://bioconductor.org/}{Bioconductor}. If the user 
-encountered an error message telling that installation of \pkg{Icens} failed, stop the current 
-installation and go back to the \R console to do the following two lines of command:
+(Gentleman and Vandal, 2011) package may not be installed by the GUI Package Installer 
+accessible from the menu bar (Windows and Mac OS) 
+because it is available only from \href{http://bioconductor.org/}{Bioconductor}. 
 
-\code{source("http://bioconductor.org/biocLite.R")}\cr
-\code{biocLite("Icens")}
+To install \pkg{DCchoice} and other dependent packages simultaneously, use the 
+\code{\link{install.packages}} function instead. See the \bold{Exapmles} section for the 
+code. 
 
-After completion of the above procedure, one may successfully install \pkg{DCchoice} and other 
-associated packages.
 }
 
 
@@ -150,7 +148,18 @@ Kristr\"{o}m B (1990).
 Measures in Discrete Response Valuation Studies.}
 \emph{Land Economics}, \bold{66}(2), 135--139.
 
+}
 
+\examples{
+## Installation of DCchoice along with dependent packages is carried out 
+## by the following lines of code:
+\dontrun{
+install.packages("DCchoice", 
+  repos = c("http://R-Forge.R-project.org", 
+    "http://www.bioconductor.org/packages/release/bioc", 
+    "http://cran.rstudio.com/"), 
+ dep = TRUE)}
+## For Mac and Unix/Linux users, add the option argument 'type="source"'. 
 }
 
 

@@ -15,7 +15,8 @@ dbchoice(formula, data, dist = "log-logistic", par = NULL, \dots)
     \item{formula}{an object of S3 class \code{"formula"} and specifies the model structure.}
     \item{data}{a data frame containing the variables in the model formula.}
     \item{dist}{a character string setting the error distribution in the model, which 
-                takes one of \code{"logistic"}, \code{"normal"}, \code{"log-logistic"} or \code{"log-normal"}.}
+                takes one of \code{"logistic"}, \code{"normal"}, \code{"log-logistic"}, 
+                \code{"log-normal"} or \code{"weibull"}.}
     \item{par}{a vector of initial parameters over which the optimization is carried out.}
     \item{x}{an object of class \code{"dbchoice"}.}
     \item{digits}{a number of digits to display.}
@@ -40,13 +41,16 @@ There are two functions available for computing the confidence intervals for the
 The argument \code{formula} defines the response variables and covariates. The argument \code{data} 
 is mandatory where the data frame containing the variables in the model is specified. The argument \code{dist} 
 sets the error distribution. 
-Currently, one of \code{"logistic"}, \code{"normal"}, \code{"log-logistic"}, or \code{"log-normal"} is available. 
+Currently, one of \code{"logistic"}, \code{"normal"}, \code{"log-logistic"}, \code{"log-normal"}, 
+or \code{"weibull"} is available. 
 The default value is \code{dist = "log-logistic"}, so that it may be omitted if the user wants to estimate a model 
 with log-logistic error distribution.
 
 The difference between normal and log-normal models or between logistic or 
-log-logistic ones is how the bid variable is incorporated into the model to be estimated. Therefore, the user 
-must be careful in defining the model formula that is explained in details below.
+log-logistic ones is how the bid variable is incorporated into the model to be estimated. 
+For the Weibull model, the bid variable must be entered in the natural log. 
+Therefore, the user must be careful in defining the model formula that is explained in details 
+below.
 
 A typical structure of the formula for \code{dbchoice()} is defined as follows:
 

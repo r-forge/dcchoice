@@ -2,7 +2,7 @@ krCI <- function(obj, nsim = 1000, CI = 0.95){
   if(CI > 1) stop("CI must be between 0 and 1")
   if(class(obj) != "sbchoice" & class(obj) != "dbchoice"){
     # stop if the object is neither a sdchoice nor a dbchoice class
-    stop("the object must be either dbchoice or sbchoice class")
+    stop("the object must be either dbchoice of sbchoice class")
   }
   
   X <- obj$covariates   # retrieving the covariates from the object
@@ -10,14 +10,16 @@ krCI <- function(obj, nsim = 1000, CI = 0.95){
   coef <- obj$coefficients   # coefficient estimates
 
   if(class(obj) == "sbchoice"){   # covariance matrix of the estimates
-    V <- vcov(obj$glm.out)
+    if(obj$dist != "weibull"){
+      V <- vcov(obj$glm.out)
+    } else {
+      V <- solve(obj$glm.out$hessian)
+    }
   } else {
     V <- solve(obj$Hessian)
   }
-#  cholV <- t(chol(V))   # lower triangular matrix
-#  kr.coef <- coef + cholV%*%matrix(rnorm(nsim*npar), npar, nsim)
 
-  kr.coef <- t(mvrnorm(nsim, coef, V))
+  kr.coef <- t(mvrnorm(nsim, coef, V))    # mvnorm is from MASS package
 
   kr.b <- kr.coef[npar, ]                   # coefficients on the covariates
   kr.coef <- kr.coef[-npar, , drop = FALSE]               # coefficient on the bid
@@ -43,6 +45,11 @@ krCI <- function(obj, nsim = 1000, CI = 0.95){
     kr.median <- sort(-kr.Xb/kr.b)
     func.kr <- function(x, A, B) pnorm(-(A + B*x), lower.tail = FALSE)
     denom <- function(A, B) pnorm(-(A + B*mbid))
+  } else if(obj$dist == "weibull") {
+    mbid <- exp(max(obj$bid))
+    kr.median <- sort(exp(-kr.Xb/kr.b)*(log(2))^(-1/kr.b))
+    func.kr <- function(x, A, B) pweibull(exp(-A - B*log(x)), shape=1, lower.tail=FALSE)
+    denom <- function(A, B) pweibull(exp(-A - B*log(mbid)), shape=1)
   }
 
   kr.meanWTP <- numeric(nsim)

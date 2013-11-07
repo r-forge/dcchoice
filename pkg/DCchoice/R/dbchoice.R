@@ -6,7 +6,7 @@ dbchoice <- function(formula, data, dist = "log-logistic", par = NULL, ...){
   if(length(formula[[2]]) != 3) stop("LHS variable in the formula must be like y1 + y2 ")
   
   # checking the distribution
-  if(dist != "logistic" & dist != "log-logistic" & dist != "normal" & dist != "log-normal"){
+  if(dist != "logistic" & dist != "log-logistic" & dist != "normal" & dist != "log-normal" & dist != "weibull"){
     stop("'dist' is incorrect.")
   }
 
@@ -71,7 +71,7 @@ dbchoice <- function(formula, data, dist = "log-logistic", par = NULL, ...){
 
    # obtaining initial parameter values by logit model
    if(is.null(par)){
-        f.stage <- glm(y1~. -1, family = binomial(link = "logit"), data = tmp.data)
+        f.stage <- glm(y1~. -1, family = binomial(link = "probit"), data = tmp.data)
          ini <- f.stage$coefficients # saving initial values for ML estimation
          npar <- length(ini)
          ini[npar] <- ifelse(ini[npar] > 0, -ini[npar], ini[npar])     # gives a negative initial value for the bid coefficient
@@ -102,7 +102,7 @@ dbchoice <- function(formula, data, dist = "log-logistic", par = NULL, ...){
                  plogis(-X1[yn == 1, ]%*%param, lower.tail = TRUE, log.p = FALSE))) +   
         sum(log(plogis(-X1[ny == 1, ]%*%param, lower.tail = TRUE, log.p = FALSE) - 
                  plogis(-X2[ny == 1, ]%*%param, lower.tail = TRUE, log.p = FALSE)))  
-        ifelse(is.finite(ll), return(-ll), 10^10) 
+        ifelse(is.finite(ll), return(-ll), NaN) 
       }
   } else if(dist == "normal" | dist == "log-normal") {
       # likelihood function
@@ -122,9 +122,28 @@ dbchoice <- function(formula, data, dist = "log-logistic", par = NULL, ...){
                    pnorm(-X1[yn == 1, ]%*%param, lower.tail = TRUE, log.p = FALSE))) +   
           sum(log(pnorm(-X1[ny == 1, ]%*%param, lower.tail = TRUE, log.p = FALSE) - 
                    pnorm(-X2[ny == 1, ]%*%param, lower.tail = TRUE, log.p = FALSE)))  
-        ifelse(is.finite(ll), return(-ll), 10^10) 
+        ifelse(is.finite(ll), return(-ll), NaN) 
         }
-  } 
+  } else if(dist == "weibull"){
+        dbLL <- function(param, dvar, ivar, bid){
+          yy <- dvar[, 1]
+          yn <- dvar[, 2]
+          ny <- dvar[, 3]
+          nn <- dvar[, 4]
+
+          X1 <- cbind(ivar, bid[, 1])
+          X2 <- cbind(ivar, bid[, 2])
+          
+          ll <- 
+          sum(pweibull(exp(-X2[yy == 1, ]%*%param), shape = 1, lower.tail = FALSE, log.p = TRUE))  + 
+          sum(pweibull(exp(-X2[nn == 1, ]%*%param), shape = 1, lower.tail = TRUE, log.p = TRUE))   + 
+          sum(log(pweibull(exp(-X2[yn == 1, ]%*%param), shape = 1, lower.tail = TRUE, log.p = FALSE) - 
+                   pweibull(exp(-X1[yn == 1, ]%*%param), shape = 1, lower.tail = TRUE, log.p = FALSE))) +   
+          sum(log(pweibull(exp(-X1[ny == 1, ]%*%param), shape = 1, lower.tail = TRUE, log.p = FALSE) - 
+                   pweibull(exp(-X2[ny == 1, ]%*%param), shape = 1, lower.tail = TRUE, log.p = FALSE)))  
+        ifelse(is.finite(ll), return(-ll), NaN) 
+        }
+  }
   
   # ML estimation of double-bounded dichotomous choice
     suppressWarnings(
@@ -169,7 +188,7 @@ summary.dbchoice <- function(object, ...){
   # estimating the null model
   formula_null <- object$formula
   formula_null[[3]][[2]] <- 1
-  db_null <- dbchoice(formula_null, data = eval(object$data.name), dist = dist)
+  db_null <- dbchoice(formula_null, data = eval(object$data.name), dist = dist, par = coef[c(1, npar)])
   
   # function for obrtaining AIC and BIC
   akaike <- function(loglik, npar, k ){
@@ -209,6 +228,15 @@ summary.dbchoice <- function(object, ...){
     object$meanWTP <- integrate(func, 0, Inf)$value
     object$trunc.meanWTP <- integrate(func, 0, max(bid))$value
     object$adj.trunc.meanWTP <- integrate(func, 0, max(bid))$value/pnorm(-(Xb + b*max(bid)))
+  } else if(dist == "weibull"){
+    b <- coef[npar]
+    Xb <- sum(colMeans(X[, -npar])*coef[-npar])
+    
+    func <- function(x) pweibull(exp(-Xb - b*log(x)), shape=1, lower.tail=FALSE)
+    object$medianWTP <- exp(-Xb/b)*(log(2))^(-1/b)
+    object$meanWTP <- ifelse(abs(b) > 1, exp(-Xb/b)*gamma(1-1/b), Inf)  
+    object$trunc.meanWTP <- integrate(func, 0, exp(max(bid)), stop.on.error = FALSE)$value                         
+    object$adj.trunc.meanWTP <- integrate(func, 0, exp(max(bid)), stop.on.error = FALSE)$value/pweibull(exp(-Xb - b*max(bid)), shape=1)                    
   }
 
   # computing pseudo-R^2

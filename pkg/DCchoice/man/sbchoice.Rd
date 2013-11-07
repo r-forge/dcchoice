@@ -18,7 +18,8 @@ sbchoice(formula, data, dist = "log-logistic", \dots)
     \item{formula}{an S3 class object \code{"formula"} and specifies the model structure.}
     \item{data}{a data frame containing the variables in the model formula.}
     \item{dist}{a character string setting the error distribution in the model, which takes one 
-        of \code{"logistic"}, \code{"normal"}, \code{"log-logistic"} or \code{"log-normal"}.}
+        of \code{"logistic"}, \code{"normal"}, \code{"log-logistic"}, \code{"log-normal"} or 
+        \code{"weibull"}.}
     \item{x}{an object of class \code{"sbchoice"}.}
     \item{digits}{a number of digits to display.}
     \item{\dots}{optional arguments. Currently not in use.}
@@ -49,10 +50,12 @@ the two functions are as follows:
     \item The function \code{sbchoice()} analyzes the responses to single-bounded dichotomous choice CV 
     questions internally using the function \code{glm()} with the argument \cr
     \code{family = binomial(link = "logit")}\cr 
-    or \code{family = binomial(link = "probit")}.
+    or \code{family = binomial(link = "probit")}.\cr
+    When \code{dist = "weibull"}, optimization is carries out using the \code{optim()} function 
+    with a hard-coded log-likelihood function.
     \item Outputs from \code{sbchoice()} are slightly different from those from \code{dbchoice()} 
-    because the analysis in \code{sbchoice()} internally depends not on the function \code{optim()} 
-    but on the function \code{glm()} (see the \bold{Value} section).
+    because the analysis in \code{sbchoice()} internally depends on the function \code{glm()} 
+    for the (log-) normal or (log-) logistic distributions. (see the \bold{Value} section).
 }
 
 Nonparametric analysis of single-bounded dichotomous choice data can be done by \code{\link{turnbull.sb}} 
@@ -65,9 +68,11 @@ This function returns an object of S3 class \code{"sbchoice"} that is a list wit
 \item{coefficients}{a named vector of estimated coefficients.}
 \item{call}{the matched call.}
 \item{formula}{the formula supplied.}
-\item{glm.out}{a list of components returned from \code{glm()} with the data set and the formula.}
+\item{glm.out}{a list of components returned from \code{glm()} with the data set and the formula. In case 
+      of the Weibull distribution, a list of components from the \code{optim()} is saved.}
 \item{glm.null}{a list of components returned from \code{glm()} with the data set and a formula 
-    containing only constant (null model).}
+    containing only constant (null model). In case of the Weibull distribution, a list of 
+    components from the \code{optim()} is saved.}
 \item{distribution}{a character string showing the error distribution used.}
 \item{nobs}{a number of observations.}
 \item{covariates}{a named matrix of the covariates used in the model.}

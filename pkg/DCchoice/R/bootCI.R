@@ -2,7 +2,7 @@
 bootCI <- function(obj, nboot = 1000, CI = 0.95){
   if(class(obj) != "sbchoice" & class(obj) != "dbchoice"){
     # stop if the object is neither a sdchoice nor a dbchoice class
-    stop("the object must be either dbchoice or sbchoice class")
+    stop("the object must be either dbchoice of sbchoice class")
   }
   
   if(CI > 1 | CI < 0) stop("CI must be between 0 and 1")
@@ -24,7 +24,7 @@ bootCI <- function(obj, nboot = 1000, CI = 0.95){
       ind.boot <- sample(ind, nobs, replace = TRUE)  # determining the number of rows for bootstrap sample with replacement
       boot.dat <- tmp.dat[ind.boot, ]  # resampling data
       suppressWarnings(
-        tmp.re <- dbchoice(fr, data = boot.dat, dist = dist)  # estimating a DBCV model
+        tmp.re <- dbchoice(fr, data = boot.dat, dist = dist, par=obj$coefficients)  # estimating a DBCV model
       )
       if(tmp.re$convergence){
         boot <- summary(tmp.re)
@@ -41,7 +41,7 @@ bootCI <- function(obj, nboot = 1000, CI = 0.95){
       ind.boot <- sample(ind, nobs, replace = TRUE)
       boot.dat <- tmp.dat[ind.boot, ]
       suppressWarnings(
-        tmp.re <- sbchoice(fr, data = boot.dat, dist = dist)
+        tmp.re <- sbchoice(fr, data = boot.dat, dist = dist, par=obj$coefficients)
       )
       if(tmp.re$glm.out$converged){
         boot <- summary(tmp.re)

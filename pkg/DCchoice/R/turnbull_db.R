@@ -114,7 +114,7 @@ summary.turnbull <- function(object, ...){
 print.turnbull <- function(x, digits = max(3, getOption("digits") - 1), ...){
   
   if(!x$turnbull$converge)  cat("The optimization did not converge\n")
-  cat("\nProbability:", formatC(x$turnbull$pf, digits = digits), "\n", sep = " ")
+  cat("\nProbability:", formatC(x$turnbull$pf, format="f", digits = digits), "\n", sep = " ")
   
   invisible(x)
 }
@@ -125,9 +125,9 @@ print.summary.turnbull <- function(x, digits = max(3, getOption("digits") - 1), 
   print.default(x$estimates, digits = 4, right = TRUE, print.gap = 2)
   
   cat("\nWTP estimates:", sep = " ")
-  cat("\n Mean:", formatC(x$meanWTP, digits = digits), "", sep = " ")
+  cat("\n Mean:", formatC(x$meanWTP, format="f", digits = digits), "", sep = " ")
   cat(" (Kaplan-Meier)", sep = "")
-  cat("\n Mean:", formatC(x$med.meanWTP, digits = digits), "", sep = " ")
+  cat("\n Mean:", formatC(x$med.meanWTP, format="f", digits = digits), "", sep = " ")
   cat(" (Spearman-Karber)", sep = "")
   cat("\n Median in:", "[", formatC(x$medianWTP[1], digits = digits), ",", formatC(x$medianWTP[2], digits = digits), "]", "\n", sep = " ")
   

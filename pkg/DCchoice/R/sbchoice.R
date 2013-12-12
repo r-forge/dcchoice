@@ -233,11 +233,11 @@ print.summary.sbchoice <- function(x, digits = max(3, getOption("digits") - 1), 
   cat("\nDistribution:", x$distribution, "", sep = " ")
   cat("\nNumber of Obs.:", formatC(x$nobs, digits = 0), " ")
   cat("\nlog-likelihood:", x$loglik, "\n", sep = " ")
-  cat("pseudo-R^2:", formatC(x$psdR2, digits = 4), 
-      ", adjusted pseudo-R^2:", formatC(x$adjpsdR2, digits = 4), "")
+  cat("pseudo-R^2:", formatC(x$psdR2, format="f", digits = 4), 
+      ", adjusted pseudo-R^2:", formatC(x$adjpsdR2, format="f", digits = 4), "")
   cat("\nLR statistic:", round(x$LR.test[1], 3), "on", formatC(x$LR.test[2], digits = 0), 
-    "DF, p-value:", formatC(x$LR.test[3], digits = 3), "\n")
-  cat("AIC:", formatC(x$AIC[1], digits = digits), ", BIC:", formatC(x$AIC[2], digits = digits), "\n")
+    "DF, p-value:", formatC(x$LR.test[3], format="f", digits = 3), "\n")
+  cat("AIC:", formatC(x$AIC[1], format="f", digits = digits), ", BIC:", formatC(x$AIC[2], format="f", digits = digits), "\n")
   cat("\nIterations:", x$glm.out$iter, " ")
   cat("\nConvergence:", x$glm.out$converged, "\n")
   

@@ -115,12 +115,12 @@ print.summary.kristrom <- function(x, digits = max(3, getOption("digits") - 1), 
   print.default(x$estimates, digits = 4, right = TRUE, print.gap = 2)
 
   cat("\nWTP estimates:", sep = " ")
-  cat("\n Mean:", formatC(x$meanWTP, digits = digits), "", sep = " ")
+  cat("\n Mean:", formatC(x$meanWTP, format="f", digits = digits), "", sep = " ")
   cat(" (Kaplan-Meier)", sep = "")
-  cat("\n Mean:", formatC(x$med.meanWTP, digits = digits), "", sep = " ")
+  cat("\n Mean:", formatC(x$med.meanWTP, format="f", digits = digits), "", sep = " ")
   cat(" (Spearman-Karber)", sep = "")
   # cat("\nMedian WTP in:", "[", formatC(x$medianWTP[1], digits = digits), ",", formatC(x$medianWTP[2], digits = digits), "]", "\n", sep = "")
-  cat("\n Median:", formatC(x$medianWTP, digits = digits), "\n", sep = " ")
+  cat("\n Median:", formatC(x$medianWTP, format="f", digits = digits), "\n", sep = " ")
 
 }
 

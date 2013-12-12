@@ -130,24 +130,24 @@ dbchoice <- function(formula, data, dist = "log-logistic", par = NULL, ...){
           yn <- dvar[, 2]
           ny <- dvar[, 3]
           nn <- dvar[, 4]
-
+          
           X1 <- cbind(ivar, bid[, 1])
           X2 <- cbind(ivar, bid[, 2])
           
           ll <- 
-          sum(pweibull(exp(-X2[yy == 1, ]%*%param), shape = 1, lower.tail = FALSE, log.p = TRUE))  + 
-          sum(pweibull(exp(-X2[nn == 1, ]%*%param), shape = 1, lower.tail = TRUE, log.p = TRUE))   + 
-          sum(log(pweibull(exp(-X2[yn == 1, ]%*%param), shape = 1, lower.tail = TRUE, log.p = FALSE) - 
-                   pweibull(exp(-X1[yn == 1, ]%*%param), shape = 1, lower.tail = TRUE, log.p = FALSE))) +   
-          sum(log(pweibull(exp(-X1[ny == 1, ]%*%param), shape = 1, lower.tail = TRUE, log.p = FALSE) - 
-                   pweibull(exp(-X2[ny == 1, ]%*%param), shape = 1, lower.tail = TRUE, log.p = FALSE)))  
+          sum(pweibull(exp(-X2[yy == 1, , drop = FALSE]%*%param), shape = 1, lower.tail = FALSE, log.p = TRUE))  + 
+          sum(pweibull(exp(-X2[nn == 1, , drop = FALSE]%*%param), shape = 1, lower.tail = TRUE, log.p = TRUE))   + 
+          sum(log(pweibull(exp(-X2[yn == 1, , drop = FALSE]%*%param), shape = 1, lower.tail = TRUE, log.p = FALSE) - 
+                   pweibull(exp(-X1[yn == 1, , drop = FALSE]%*%param), shape = 1, lower.tail = TRUE, log.p = FALSE))) +   
+          sum(log(pweibull(exp(-X1[ny == 1, , drop = FALSE]%*%param), shape = 1, lower.tail = TRUE, log.p = FALSE) - 
+                   pweibull(exp(-X2[ny == 1, , drop = FALSE]%*%param), shape = 1, lower.tail = TRUE, log.p = FALSE)))  
         ifelse(is.finite(ll), return(-ll), NaN) 
         }
   }
   
   # ML estimation of double-bounded dichotomous choice
-    suppressWarnings(
-    dbchoice <- optim(ini, fn = dbLL, method="BFGS", hessian = TRUE, dvar = yvar, ivar = X, bid = bid, control=list(abstol=10^(-30)))
+  suppressWarnings(
+        dbchoice <- optim(ini, fn = dbLL, method="BFGS", hessian = TRUE, dvar = yvar, ivar = X, bid = bid, control=list(abstol=10^(-30)))
     )
   npar <- length(dbchoice$par)
   
@@ -186,9 +186,9 @@ summary.dbchoice <- function(object, ...){
   dist = object$distribution
 
   # estimating the null model
-  formula_null <- object$formula
-  formula_null[[3]][[2]] <- 1
-  db_null <- dbchoice(formula_null, data = eval(object$data.name), dist = dist, par = coef[c(1, npar)])
+   formula_null <- object$formula
+   formula_null[[3]][[2]] <- 1
+   db_null <- dbchoice(formula_null, data = eval(object$data.name), dist = dist, par = coef[c(1, npar)])
   
   # function for obrtaining AIC and BIC
   akaike <- function(loglik, npar, k ){
@@ -290,12 +290,12 @@ print.summary.dbchoice <- function(x, digits = max(3, getOption("digits") - 1), 
   
   cat("\nDistribution:", x$distribution, "", sep = " ")
   cat("\nNumber of Obs.:", formatC(x$nobs, digits = 0), "\n")
-  cat("Log-likelihood:", formatC(x$loglik, digits = digits), "\n")
-  cat("pseudo-R^2:", formatC(x$psdR2, digits = 4), 
-      ", adjusted pseudo-R^2:", formatC(x$adjpsdR2, digits = 4), "")
+  cat("Log-likelihood:", formatC(x$loglik, format="f", digits = digits), "\n")
+  cat("pseudo-R^2:", formatC(x$psdR2, format="f", digits = 4), 
+      ", adjusted pseudo-R^2:", formatC(x$adjpsdR2, format="f", digits = 4), "")
   cat("\nLR statistic:", round(x$LR.test[1], 3), "on", formatC(x$LR.test[2], digits = 0), 
-    "DF, p-value:", formatC(x$LR.test[3], digits = 3), "\n")
-  cat("AIC:", formatC(x$AIC[1], digits = digits), ", BIC:", formatC(x$AIC[2], digits = digits), "\n")
+    "DF, p-value:", formatC(x$LR.test[3], format="f", digits = 3), "\n")
+  cat("AIC:", formatC(x$AIC[1], format="f", digits = digits), ", BIC:", formatC(x$AIC[2], format="f", digits = digits), "\n")
   cat("\nIterations:", formatC(x$niter, digits = 0), "")
   cat("\nConvergence:", x$convergence, "\n")
 

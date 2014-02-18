@@ -186,9 +186,9 @@ summary.dbchoice <- function(object, ...){
   dist = object$distribution
 
   # estimating the null model
-   formula_null <- object$formula
-   formula_null[[3]][[2]] <- 1
-   db_null <- dbchoice(formula_null, data = eval(object$data.name), dist = dist, par = coef[c(1, npar)])
+    formula_null <- object$formula
+    formula_null[[3]][[2]] <- 1
+    db_null <- dbchoice(formula_null, data = eval(object$data.name), dist = dist, par = coef[c(1, npar)])
   
   # function for obrtaining AIC and BIC
   akaike <- function(loglik, npar, k ){
@@ -240,10 +240,10 @@ summary.dbchoice <- function(object, ...){
   }
 
   # computing pseudo-R^2
-  object$psdR2 <- 1 - object$loglik/db_null$loglik
-  names(object$psdR2) <- "pseudo-R^2 measure"
-  object$adjpsdR2 <- 1 - (object$loglik - npar)/db_null$loglik
-  names(object$adjpsdR2) <- "adjusted pseudo-R^2 measure"
+#   object$psdR2 <- 1 - object$loglik/db_null$loglik
+#   names(object$psdR2) <- "pseudo-R^2 measure"
+#   object$adjpsdR2 <- 1 - (object$loglik - npar)/db_null$loglik
+#   names(object$adjpsdR2) <- "adjusted pseudo-R^2 measure"
   
   # Likelihood Ratio Statistic
   LR <- -2*(db_null$loglik - object$loglik)
@@ -291,8 +291,8 @@ print.summary.dbchoice <- function(x, digits = max(3, getOption("digits") - 1), 
   cat("\nDistribution:", x$distribution, "", sep = " ")
   cat("\nNumber of Obs.:", formatC(x$nobs, digits = 0), "\n")
   cat("Log-likelihood:", formatC(x$loglik, format="f", digits = digits), "\n")
-  cat("pseudo-R^2:", formatC(x$psdR2, format="f", digits = 4), 
-      ", adjusted pseudo-R^2:", formatC(x$adjpsdR2, format="f", digits = 4), "")
+#   cat("pseudo-R^2:", formatC(x$psdR2, format="f", digits = 4), 
+#       ", adjusted pseudo-R^2:", formatC(x$adjpsdR2, format="f", digits = 4), "")
   cat("\nLR statistic:", formatC(x$LR.test[1], format="f", digits = 3), "on", formatC(x$LR.test[2], digits = 0), 
     "DF, p-value:", formatC(x$LR.test[3], format="f", digits = 3), "\n")
   cat("AIC:", formatC(x$AIC[1], format="f", digits = digits), ", BIC:", formatC(x$AIC[2], format="f", digits = digits), "\n")

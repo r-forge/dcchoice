@@ -42,10 +42,8 @@ Summary method for objects of class \code{"dbchoice"}.
     \item{trunc.meanWTP}{the estimated mean WTP truncated at the maximum bid.}
     \item{adj.trunc.meanWTP}{the truncated mean WTP with the adjustment of 
     Boyle \emph{et~al.}(1988).}
-    \item{psdR2}{McFadden's pseudo-R2 measure.}
-    \item{adjpsdR2}{McFadden's pseudo-R2 measure adjusted for the degrees of freedom.}
     \item{LR.test}{a vector containing the likelihood ratio test statistic, the degrees 
-        of freedom and the associated p-value.}
+        of freedom and the associated p-value. The null is that all the parameters on the explanatory variables other than constant and the bid variable are jointly zero.}
     \item{coef}{a table of estimates including their s.e., z-value, and p-value.}
     \item{AIC}{information criterion (AIC and BIC).}
 }

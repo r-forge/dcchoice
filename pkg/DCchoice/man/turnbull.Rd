@@ -11,10 +11,10 @@ data on the basis of the Kaplan-Meier-Turnbull method.
 
 \usage{
 ## for the single-bounded data
-turnbull.sb(formula, data)
+turnbull.sb(formula, data, conf.int = FALSE, B = 200, conf.level = 0.95, timeMessage = FALSE, \dots)
 
 ## for the double-bounded data
-turnbull.db(formula, data)
+turnbull.db(formula, data, conf.int = FALSE, B = 200, conf.level = 0.95, timeMessage = FALSE, \dots)
 
 \method{print}{turnbull}(x, digits = max(3, getOption("digits") - 1), \dots)
 }
@@ -23,6 +23,10 @@ turnbull.db(formula, data)
     \item{formula}{a formula specifying the model structure.}
     \item{data}{a data frame containing the variables in the model formula.}
     \item{x}{an object of class \code{"turnbull"}.}
+    \item{conf.int}{logical. If \code{TRUE}, the confidence interval is computed. }
+    \item{B}{ number of bootstrap resampling.}
+    \item{conf.level}{a confidence coefficient. Defaulted to 0.95.}
+    \item{timeMessage}{logical. If \code{TRUE}, the estimated time for bootstrapping is displayed.}
     \item{digits}{a number of digits to display.}
     \item{\dots}{optional arguments. Currently not in use.}
 }

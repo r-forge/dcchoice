@@ -71,36 +71,25 @@ summary.turnbull <- function(object, ...){
     nbid <- length(unq.bid)    # the number of unique bids
     unq.bid <- unq.bid[-nbid]  # excluding Inf
     suv <- 1 - round(cumsum(p), 12)
-    
-    # confidence interval
-    if(!is.null(object$turnbull$CI)){
-        low <- unique(object$turnbull$CI$lower)
-        up <- unique(object$turnbull$CI$upper)
-        # colnames(ci) <- c("lower", "upper")
-    }
+    suv <- c(1, suv)
     
     # adjusting probabilities for missing intervals from icfit()
     ip <- object$turnbull$intmap[1,]
     if(nbid != length(ip)){
-        if(!is.null(object$turnbull$CI)){
-            for(i in 2:(nbid-1)){
-                if(unq.bid[i] != ip[i]){
-                    ip <- append(ip, unq.bid[i], after= (i-1))
-                    suv <- append(suv, suv[i-1], after= (i-1))
-                    low <- append(low, low[i], after = (i))
-                    up <- append(up, up[i], after = (i))
-                }
-            }
-        } else {
-            for(i in 2:(nbid-1)){
-                if(unq.bid[i] != ip[i]){
-                    ip <- append(ip, unq.bid[i], after= (i-1))
-                    suv <- append(suv, suv[i-1], after= (i-1))
-                }
-            }
+      for(i in 2:(nbid-1)){
+        if(unq.bid[i] != ip[i]){
+          ip <- append(ip, unq.bid[i], after= (i-1))
+          suv <- append(suv, suv[i], after= (i-1))
         }
+      }
     }
-    suv <- c(1, suv)      # adding probability for bid = 0
+    
+    # confidence intervals
+    if(!is.null(object$turnbull$CI)){
+      object$CI <- cbind(object$turnbull$CI$time, object$turnbull$CI$lower, object$turnbull$CI$upper)
+      colnames(object$CI) <- c("Bid", "Lower", "Upper")
+      rownames(object$CI) <- seq(1, nrow(object$CI))
+    }
     
     names(suv) <- blabel  # labels for survival probabilities
     x.ax <- blabel[-length(blabel)]   # points on the x-ax in the plot
@@ -120,10 +109,6 @@ summary.turnbull <- function(object, ...){
     estimates <- cbind(blabel, suv)
     colnames(estimates) <- c("Upper", "Prob.")
     rownames(estimates) <- seq(1, nrow(estimates))
-    if(!is.null(object$turnbull$CI)){
-        estimates <- cbind(estimates, low, up)
-        colnames(estimates)[3:4] <- c("LB", "UB")
-    }
     object$estimates <- estimates
     
     class(object) <- "summary.turnbull"
@@ -144,6 +129,10 @@ print.summary.turnbull <- function(x, digits = max(3, getOption("digits") - 1), 
   cat("Survival probability:", "\n", sep = " ")
   print.default(x$estimates, digits = 4, right = TRUE, print.gap = 2)
   
+  if(!is.null(x$CI)){
+    cat("\nBootstrap confidence intervals (conf.lev = ", object$turnbull$CI$conf.level, ")", "\n", sep = "")
+    print.default(x$CI, digits = 4, right = TRUE, print.gap = 2)
+  }
   cat("\nWTP estimates:", sep = " ")
   cat("\n Mean:", formatC(x$meanWTP, format="f", digits = digits), "", sep = " ")
   cat(" (Kaplan-Meier)", sep = "")
@@ -154,7 +143,7 @@ print.summary.turnbull <- function(x, digits = max(3, getOption("digits") - 1), 
 }
 
 # plotting the estimated survivor function
-plot.turnbull <- function(x, main = NULL, sub = NULL, xlab = NULL, ylab = NULL, lwd = NULL, lty = NULL, plotCI = TRUE, ltyCI = 5, ...){
+plot.turnbull <- function(x, main = NULL, sub = NULL, xlab = NULL, ylab = NULL, lwd = NULL, lty = NULL, plotCI = FALSE, ltyCI = 5, ...){
     if(is.null(main)) main <- ""                       # main title
     if(is.null(sub)) sub <- ""                         # subtitle
     if(is.null(xlab)) xlab <- "Bid"                    # label of x-axis
@@ -165,13 +154,14 @@ plot.turnbull <- function(x, main = NULL, sub = NULL, xlab = NULL, ylab = NULL, 
     plot.x <- summary.turnbull(x)                      # summarizing the object for plot
     n.ax <- length(plot.x$x.ax)                        # the number of points on the x-axis
     
-    plot.default(plot.x$x.ax, plot.x$estimates[, 2], axes = F, xlab = xlab, ylab = ylab, main = main, sub = sub, lwd = lwd, lty = lty, type = "S", ylim = c(0,1))
+    xlim <- range(plot.x$x.ax)
+    plot.default(plot.x$x.ax, plot.x$estimates[, 2], axes = F, xlab = xlab, ylab = ylab, main = main, sub = sub, lwd = lwd, lty = lty, type = "S", xlim = xlim, ylim = c(0,1))
     if(plotCI){
         if(!is.null(x$turnbull$CI)){
-            par(new = TRUE)
-            plot.default(plot.x$x.ax - 10^-6, plot.x$estimates[, 3], axes = F, xlab = "", ylab = "", main = "", sub = "", lty = ltyCI, type = "S", ylim = c(0,1))
-            par(new = TRUE)
-            plot.default(plot.x$x.ax + 10^-6, plot.x$estimates[, 4], axes = F, xlab = "", ylab = "", main = "", sub = "", lty = ltyCI, type = "S", ylim = c(0,1))
+          par(new = TRUE)
+          plot.default(plot.x$CI[,1], plot.x$CI[, 2], axes = F, xlab = "", ylab = "", main = "", sub = "", lty = ltyCI, type = "S", xlim = xlim, ylim = c(0,1))
+          par(new = TRUE)
+          plot.default(plot.x$CI[,1], plot.x$CI[, 3], axes = F, xlab = "", ylab = "", main = "", sub = "", lty = ltyCI, type = "S", xlim = xlim, ylim = c(0,1))
         }
     }
     axis(1, pos = 0, at = plot.x$x.ax[-n.ax], adj = 0)            # adding the x-axis

@@ -130,7 +130,7 @@ print.summary.turnbull <- function(x, digits = max(3, getOption("digits") - 1), 
   print.default(x$estimates, digits = 4, right = TRUE, print.gap = 2)
   
   if(!is.null(x$CI)){
-    cat("\nBootstrap confidence intervals (conf.lev = ", object$turnbull$CI$conf.level, ")", "\n", sep = "")
+    cat("\nBootstrap confidence intervals (conf.lev = ", x$turnbull$CI$conf.level, ")", "\n", sep = "")
     print.default(x$CI, digits = 4, right = TRUE, print.gap = 2)
   }
   cat("\nWTP estimates:", sep = " ")

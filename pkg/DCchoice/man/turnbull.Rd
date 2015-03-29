@@ -24,7 +24,7 @@ turnbull.db(formula, data, conf.int = FALSE, B = 200, conf.level = 0.95, timeMes
     \item{data}{a data frame containing the variables in the model formula.}
     \item{x}{an object of class \code{"turnbull"}.}
     \item{conf.int}{logical. If \code{TRUE}, the confidence intervals are computed.}
-    \item{B}{number of bootstrap resampling for confidence interval estimation.}
+    \item{B}{number of bootstrap resampling for confidence interval estimation. Defaulted to 200.}
     \item{conf.level}{a confidence coefficient. Defaulted to 0.95.}
     \item{timeMessage}{logical. If \code{TRUE}, the estimated time for bootstrapping is displayed.}
     \item{digits}{a number of digits to display.}
@@ -83,7 +83,7 @@ carried out by \code{\link{dbchoice}}.
 The structure of data set which assigned to the argument \code{data} is the same as that 
 of \code{dbchoice()}. See \code{\link{dbchoice}} for details in the data set structure.
 
-The confidence intervals are computed by the bootstrap method in \code{\link[interval]{icfit}} of the \pkg{interval} (Fay and Shaw, 2010) package. The arguments \code{conf.int}, \code{B}, \code{conf.level} and \code{timeMessage} are passed to \code{icfit()}. See the help of \code{\link[interval]{icfit}} for futher detail.
+The confidence intervals are computed by the bootstrap method in \code{\link[interval]{icfit}} of the \pkg{interval} (Fay and Shaw, 2010) package. The arguments \code{conf.int}, \code{B}, \code{conf.level} and \code{timeMessage} are passed to \code{icfit()}. The bootstrap can be time consuming, so that it is in general not advisable to increase the number of bootstrap resamplint \code{B}. See the help of \code{\link[interval]{icfit}} for futher detail.
 
 The generic function \code{print()} is available for a fitted model object 
 of class \code{"turnbull"} and displays simply estimated probabilities of 

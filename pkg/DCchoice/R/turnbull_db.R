@@ -87,7 +87,7 @@ summary.turnbull <- function(object, ...){
     # confidence intervals
     if(!is.null(object$turnbull$CI)){
       object$CI <- cbind(object$turnbull$CI$time, object$turnbull$CI$lower, object$turnbull$CI$upper)
-      colnames(object$CI) <- c("Bid", "Lower", "Upper")
+      colnames(object$CI) <- c("Bid", "LB", "UB")
       rownames(object$CI) <- seq(1, nrow(object$CI))
     }
     
@@ -103,7 +103,7 @@ summary.turnbull <- function(object, ...){
     object$med.meanWTP <- sum(med.suv*x.interval)
     
     # Median
-    object$x.ax <- c(x.ax, 1.1*max(x.ax))
+    object$x.ax <- c(x.ax, 1.15*max(x.ax))
     object$medianWTP <- c(x.ax[max(which(suv > 0.5))], x.ax[min(which(suv < 0.5))])
     # making an output table
     estimates <- cbind(blabel, suv)
@@ -158,10 +158,14 @@ plot.turnbull <- function(x, main = NULL, sub = NULL, xlab = NULL, ylab = NULL, 
     plot.default(plot.x$x.ax, plot.x$estimates[, 2], axes = F, xlab = xlab, ylab = ylab, main = main, sub = sub, lwd = lwd, lty = lty, type = "S", xlim = xlim, ylim = c(0,1))
     if(plotCI){
         if(!is.null(x$turnbull$CI)){
+          tmpCI <- cbind(plot.x$CI[seq(1, nrow(plot.x$CI), by = 2), 1:2], plot.x$CI[seq(2, nrow(plot.x$CI), by = 2), 3])
+          tmpCI[nrow(tmpCI),1] <- plot.x$x.ax[n.ax]
+          colnames(tmpCI) <- c("Bid", "LB", "UB")
+          rownames(tmpCI) <- seq(1, nrow(tmpCI))
           par(new = TRUE)
-          plot.default(plot.x$CI[,1], plot.x$CI[, 2], axes = F, xlab = "", ylab = "", main = "", sub = "", lty = ltyCI, type = "S", xlim = xlim, ylim = c(0,1))
+          plot.default(tmpCI[, 1:2], axes = F, xlab = "", ylab = "", main = "", sub = "", lty = ltyCI, type = "S", xlim = xlim, ylim = c(0,1))
           par(new = TRUE)
-          plot.default(plot.x$CI[,1], plot.x$CI[, 3], axes = F, xlab = "", ylab = "", main = "", sub = "", lty = ltyCI, type = "S", xlim = xlim, ylim = c(0,1))
+          plot.default(tmpCI[, c(1,3)], axes = F, xlab = "", ylab = "", main = "", sub = "", lty = ltyCI, type = "S", xlim = xlim, ylim = c(0,1))
         }
     }
     axis(1, pos = 0, at = plot.x$x.ax[-n.ax], adj = 0)            # adding the x-axis

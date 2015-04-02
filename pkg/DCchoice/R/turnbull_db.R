@@ -87,8 +87,17 @@ summary.turnbull <- function(object, ...){
     # confidence intervals
     if(!is.null(object$turnbull$CI)){
       object$CI <- cbind(object$turnbull$CI$time, object$turnbull$CI$lower, object$turnbull$CI$upper)
+      object$CI <- cbind(object$CI[seq(1, nrow(object$CI), by = 2), 1:2], object$CI[seq(2, nrow(object$CI), by = 2), 3])
       colnames(object$CI) <- c("Bid", "LB", "UB")
       rownames(object$CI) <- seq(1, nrow(object$CI))
+      
+      # tmpCI <- cbind(plot.x$CI[seq(1, nrow(plot.x$CI), by = 2), 1:2], plot.x$CI[seq(2, nrow(plot.x$CI), by = 2), 3])
+      # tmpCI[nrow(tmpCI),1] <- plot.x$x.ax[n.ax]
+      # colnames(tmpCI) <- c("Bid", "LB", "UB")
+      # rownames(tmpCI) <- seq(1, nrow(tmpCI))
+      
+    
+    
     }
     
     names(suv) <- blabel  # labels for survival probabilities
@@ -158,10 +167,9 @@ plot.turnbull <- function(x, main = NULL, sub = NULL, xlab = NULL, ylab = NULL, 
     plot.default(plot.x$x.ax, plot.x$estimates[, 2], axes = F, xlab = xlab, ylab = ylab, main = main, sub = sub, lwd = lwd, lty = lty, type = "S", xlim = xlim, ylim = c(0,1))
     if(plotCI){
         if(!is.null(x$turnbull$CI)){
-          tmpCI <- cbind(plot.x$CI[seq(1, nrow(plot.x$CI), by = 2), 1:2], plot.x$CI[seq(2, nrow(plot.x$CI), by = 2), 3])
+          # tmpCI <- cbind(plot.x$CI[seq(1, nrow(plot.x$CI), by = 2), 1:2], plot.x$CI[seq(2, nrow(plot.x$CI), by = 2), 3])
+          tmpCI <- plot.x$CI
           tmpCI[nrow(tmpCI),1] <- plot.x$x.ax[n.ax]
-          colnames(tmpCI) <- c("Bid", "LB", "UB")
-          rownames(tmpCI) <- seq(1, nrow(tmpCI))
           par(new = TRUE)
           plot.default(tmpCI[, 1:2], axes = F, xlab = "", ylab = "", main = "", sub = "", lty = ltyCI, type = "S", xlim = xlim, ylim = c(0,1))
           par(new = TRUE)

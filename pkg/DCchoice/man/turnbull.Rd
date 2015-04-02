@@ -11,10 +11,12 @@ data on the basis of the Kaplan-Meier-Turnbull method.
 
 \usage{
 ## for the single-bounded data
-turnbull.sb(formula, data, conf.int = FALSE, B = 200, conf.level = 0.95, timeMessage = FALSE, \dots)
+turnbull.sb(formula, data, conf.int = FALSE, B = 200, 
+            conf.level = 0.95, timeMessage = FALSE, \dots)
 
 ## for the double-bounded data
-turnbull.db(formula, data, conf.int = FALSE, B = 200, conf.level = 0.95, timeMessage = FALSE, \dots)
+turnbull.db(formula, data, conf.int = FALSE, B = 200, 
+            conf.level = 0.95, timeMessage = FALSE, \dots)
 
 \method{print}{turnbull}(x, digits = max(3, getOption("digits") - 1), \dots)
 }

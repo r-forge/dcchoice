@@ -4,7 +4,8 @@ export("dbchoice",
        "turnbull.sb", 
        "kristrom", 
        "bootCI", 
-       "krCI" 
+       "krCI",
+       "ct2df"
        )
 
 import(MASS)

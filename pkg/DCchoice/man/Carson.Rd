@@ -62,11 +62,27 @@ Carson RT, Mitchell RC, Hanemann WM, Kopp RJ, Presser S, Ruud PA (1992).
 
 }
 
+\seealso{
+\code{\link{ct2df}}
+}
+
 \examples{
 ## The following lines of code reconstruct the original yes/no type of data 
 ## for 1043 observations. A data frame object sb.data consists of two variables, 
-## namely, bid1 and R1. 
+## namely, bid1 and R1. The conversion into a simole data frame object can be 
+## done either manually or by using the \code{ct2df} function. 
 data(CarsonSB)
+
+## Using the \code{ct2df} function
+CarsonSB.dat <- ct2df(
+  x    = CarsonSB,
+  bid1 = "T1",
+  y    = "Y",
+  n    = "N",
+  type = "single")
+head(CarsonSB.dat)
+
+# Manual conversion
 n <- rowSums(CarsonSB[, -1])
 sb.data <- data.frame(
   bid = c(rep(CarsonSB$T1[1], n[1]), 
@@ -80,6 +96,25 @@ sb.data <- data.frame(
 )
 dim(sb.data)
 head(sb.data)
+
+## Double-bounded dichotomous choice CV format.
+data(CarsonDB)
+CarsonDB
+CarsonDB.dat <- ct2df(
+  x     = CarsonDB,
+  bid1  = "T1",
+  bid2h = "TU",
+  bid2l = "TL",
+  yy    = "yy",
+  yn    = "yn",
+  ny    = "ny",
+  nn    = "nn",
+  type  = "double")
+head(CarsonDB.dat)
+
+## An example of manual conversion is omitted. 
+## See Appendix 2.A of Aizaki, et. al. (2014). 
+
 }
 
 

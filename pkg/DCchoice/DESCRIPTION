@@ -1,6 +1,6 @@
 Package: DCchoice
-Version: 0.0.9-1
-Date: 2015-4-2
+Version: 0.0.10
+Date: 2015-6-18
 Title: Analyzing Dichotomous Choice Contingent Valuation Data
 Authors@R: c( person("Tomoaki", "Nakatani", role = c("aut", "cre",
         "cph"), email = "naktom2@gmail.com"), person("Hideo", "Aizaki",

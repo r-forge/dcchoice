@@ -63,7 +63,7 @@ turnbull.db <- function(formula, data, conf.int = FALSE, B = 200, conf.level = 0
     
 }
 
-summary.turnbull <- function(object, ...){
+summary.turnbull <- function(object, printCI=TRUE, ...){
     p <- object$turnbull$pf
     x.str <- object$turnbull$strata   # the number of intervals
     unq.bid <- object$unq.bid  # a vector of unique bids
@@ -85,6 +85,7 @@ summary.turnbull <- function(object, ...){
     }
     
     # confidence intervals
+    if(printCI){
     if(!is.null(object$turnbull$CI)){
       object$CI <- cbind(object$turnbull$CI$time, object$turnbull$CI$lower, object$turnbull$CI$upper)
       object$CI <- cbind(object$CI[seq(1, nrow(object$CI), by = 2), 1:2], object$CI[seq(2, nrow(object$CI), by = 2), 3])
@@ -95,9 +96,7 @@ summary.turnbull <- function(object, ...){
       # tmpCI[nrow(tmpCI),1] <- plot.x$x.ax[n.ax]
       # colnames(tmpCI) <- c("Bid", "LB", "UB")
       # rownames(tmpCI) <- seq(1, nrow(tmpCI))
-      
-    
-    
+    }
     }
     
     names(suv) <- blabel  # labels for survival probabilities

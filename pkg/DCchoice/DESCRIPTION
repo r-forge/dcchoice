@@ -10,7 +10,7 @@ Authors@R: c( person("Tomoaki", "Nakatani", role = c("aut", "cre",
         manual"))
 Author: Tomoaki Nakatani
 Maintainer: Tomoaki Nakatani <naktom2@gmail.com>
-Depends: R (>= 2.15.2), stats, MASS, Ecdat, interval
+Depends: R (>= 3.1.0), stats, MASS, Ecdat, interval
 License: GPL (>= 2)
 Description: Functions for analyzing dichotomous choice contingent valuation (CV) data. It provides 
    functions for estimating parametric and nonparametric models for single- and double-bounded 

@@ -278,7 +278,7 @@ print.dbchoice <- function(x, digits = max(3, getOption("digits") - 1), ...){
 
 print.summary.dbchoice <- function(x, digits = max(3, getOption("digits") - 1), ...){
 
-  # what shall we do for Pearson residuals？
+  # what shall we do for Pearson residuals?
 
   cat("\nCall:", deparse(x$call, width.cutoff = floor(getOption("width") * 0.85)), "", sep = "\n")
   cat("Formula:", deparse(x$formula, width.cutoff = floor(getOption("width") * 0.85)), "", sep = "\n")

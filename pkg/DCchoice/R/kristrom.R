@@ -92,7 +92,7 @@ summary.kristrom <- function(object, digits = max(3, getOption("digits") - 1), .
     x.icpt <- 1.5*object$unq.bid[object$M]    # this is somewhat arbitrary...
   }
   # mean WTP
-  object$med.meanWTP <- area + 0.5*(x.icpt - object$unq.bid[object$M])*object$adj.P[object$M]         # 端点の扱い
+  object$med.meanWTP <- area + 0.5*(x.icpt - object$unq.bid[object$M])*object$adj.P[object$M]         # treatment of the corner point?
   names(object$med.meanWTP) <- "meanWTP(SK)"
 
   object$meanWTP <- sum(object$adj.P[-1]*diff(object$unq.bid))         

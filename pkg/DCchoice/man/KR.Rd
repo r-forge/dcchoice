@@ -30,8 +30,6 @@ data(KR)
 
 \source{
     The data are used in Kristr\"{o}m (1990). 
-    The original data are available for download at 
-    http://www-sekon.slu.se/~bkr/closed.htm.
     
     The data are bundled in this package under kind permission from 
     Professor Bengt Kristr\"{o}m, Swedish University of Agricultural Sciences.
